@@ -557,6 +557,146 @@
       color: var(--mute-deep); text-transform: uppercase;
     }
 
+    /* ─── MODAL CARTA ───────────────────────────────────────────  */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 500;
+      background: rgba(5,5,7,0.92);
+      backdrop-filter: blur(12px) saturate(1.2);
+      opacity: 0; pointer-events: none;
+      transition: opacity var(--med) var(--ease);
+      display: flex; align-items: flex-start; justify-content: center;
+      padding: 48px 24px;
+      overflow-y: auto;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+    .modal {
+      width: 100%; max-width: 860px;
+      background: var(--ink);
+      border: 1px solid var(--line-h);
+      position: relative;
+      transform: translateY(32px);
+      transition: transform var(--med) var(--ease-out);
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+
+    .modal-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 28px 40px;
+      border-bottom: 1px solid var(--line);
+      position: sticky; top: 0;
+      background: var(--ink);
+      z-index: 10;
+    }
+    .modal-header::before {
+      content: '';
+      position: absolute; top: -1px; left: 0;
+      width: 48px; height: 2px;
+      background: var(--violet);
+    }
+    .modal-title {
+      font-family: var(--f-mono);
+      font-size: 10.5px; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--violet-cold);
+    }
+    .modal-close {
+      font-family: var(--f-mono);
+      font-size: 10.5px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--mute);
+      display: flex; align-items: center; gap: 10px;
+      cursor: pointer;
+      transition: color var(--fast);
+      padding: 8px 0;
+    }
+    .modal-close:hover { color: var(--bone); }
+    .modal-close::before { content: '×'; font-size: 18px; font-family: var(--f-display); line-height: 1; }
+
+    .modal-body { padding: 40px; }
+
+    .modal-intro {
+      margin-bottom: 40px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--line);
+    }
+    .modal-intro h2 {
+      font-family: var(--f-display);
+      font-weight: 500; font-size: clamp(28px, 4vw, 44px);
+      line-height: 0.96; letter-spacing: -0.025em;
+      margin-bottom: 12px;
+    }
+    .modal-intro h2 em { font-style: normal; color: var(--violet-cold); font-weight: 300; }
+    .modal-intro p {
+      color: var(--pale); font-size: 14px;
+      font-weight: 300; line-height: 1.6; max-width: 480px;
+    }
+
+    .modal-familias {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0;
+      border: 1px solid var(--line);
+      margin-bottom: 40px;
+    }
+    .modal-familia {
+      padding: 28px 32px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .modal-familia:nth-child(even) { border-right: none; }
+    .modal-familia:nth-last-child(-n+2) { border-bottom: none; }
+
+    .mf-nombre {
+      font-family: var(--f-mono);
+      font-size: 10px; letter-spacing: 0.22em;
+      color: var(--violet-cold); text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .mf-lista { list-style: none; display: flex; flex-direction: column; gap: 0; }
+    .mf-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+      align-items: baseline;
+    }
+    .mf-item:last-child { border-bottom: none; }
+    .mf-nombre-coctel {
+      font-family: var(--f-display);
+      font-size: 14px; font-weight: 400;
+      color: var(--bone); letter-spacing: -0.005em;
+    }
+    .mf-base {
+      font-family: var(--f-mono);
+      font-size: 9.5px; letter-spacing: 0.12em;
+      color: var(--mute); text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .modal-nota {
+      display: flex; gap: 0;
+      border: 1px solid var(--line);
+    }
+    .modal-nota-bar {
+      width: 4px; flex-shrink: 0;
+      background: var(--violet);
+    }
+    .modal-nota-text {
+      padding: 16px 20px;
+      font-size: 13px; color: var(--mute);
+      font-weight: 300; line-height: 1.65;
+    }
+    .modal-nota-text strong { color: var(--pale); font-weight: 400; }
+
+    @media (max-width: 680px) {
+      .modal-header { padding: 20px 24px; }
+      .modal-body { padding: 24px; }
+      .modal-familias { grid-template-columns: 1fr; }
+      .modal-familia { border-right: none; }
+      .modal-familia:nth-last-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .modal-familia:last-child { border-bottom: none; }
+    }
+
     /* ─── REVEAL ─────────────────────────────────────────────── */
     .reveal {
       opacity: 0; transform: translateY(24px);
@@ -764,7 +904,7 @@
       <div class="carta-intro">
         <p>Trabajamos con cuatro familias base. Para eventos más grandes o corporativos podemos desarrollar un cóctel exclusivo para la ocasión.</p>
         <p>¿Quieres ver la carta completa con todas las variaciones?</p>
-        <a href="https://thedrink.cl" target="_blank" class="carta-link">Ver carta completa</a>
+        <button onclick="abrirCarta()" class="carta-link" style="background:none;border:none;border-bottom:1px solid rgba(157,124,216,0.3);cursor:pointer;padding-bottom:4px;">Ver carta completa</button>
       </div>
 
       <div class="carta-familias">
@@ -867,6 +1007,83 @@
   </div>
 </section>
 
+<!-- ─── MODAL CARTA ──────────────────────────────────────────── -->
+<div class="modal-overlay" id="modalCarta" onclick="cerrarCarta(event)">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Carta de cócteles">
+
+    <div class="modal-header">
+      <div class="modal-title">Carta de cócteles · 2026</div>
+      <button class="modal-close" onclick="cerrarCarta(null, true)">Cerrar</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="modal-intro">
+        <h2>Todos los<br/><em>cócteles</em></h2>
+        <p>Servidos en vaso de 480ml con ingredientes frescos. El menú de cada evento se define según el paquete contratado — podemos incluir una, varias o todas las familias.</p>
+      </div>
+
+      <div class="modal-familias">
+
+        <!-- Mojitos -->
+        <div class="modal-familia">
+          <div class="mf-nombre">Mojitos</div>
+          <ul class="mf-lista">
+            <li class="mf-item"><span class="mf-nombre-coctel">Mojito clásico</span><span class="mf-base">Ron · Lima · Menta</span></li>
+            <li class="mf-item"><span class="mf-nombre-coctel">Mojito frutilla</span><span class="mf-base">Ron · Frutilla</span></li>
+            <li class="mf-item"><span class="mf-nombre-coctel">Mojito frambuesa</span><span class="mf-base">Ron · Frambuesa</span></li>
+            <li class="mf-item"><span class="mf-nombre-coctel">Mojito maracuyá</span><span class="mf-base">Ron · Maracuyá</span></li>
+            <li class="mf-item"><span class="mf-nombre-coctel">Mojito mango</span><span class="mf-base">Ron · Mango</span></li>
+            <li class="mf-item"><span class="mf-nombre-coctel">Mojito piña</span><span class="mf-base">Ron · Piña</span></li>
+            <li class="mf-item"><span class="mf-nombre-coctel">Mojito Coco Blue</span><span class="mf-base">Ron · Coco · Curazao</span></li>
+            <li class="mf-item"><span class="mf-nombre-coctel">Mojito frambuesa-coco</span><span class="mf-base">Ron · Frambuesa · Coco</span></li>
+          </ul>
+        </div>
+
+        <!-- Coladas -->
+        <div class="modal-familia">
+          <div class="mf-nombre">Coladas</div>
+          <ul class="mf-lista">
+            <li class="mf-item"><span class="mf-nombre-coctel">Piña Colada</span><span class="mf-base">Ron · Crema coco · Piña</span></li>
+            <li class="mf-item"><span class="mf-nombre-coctel">Mango Colada</span><span class="mf-base">Ron · Crema coco · Mango</span></li>
+            <li class="mf-item"><span class="mf-nombre-coctel">Frutilla Colada</span><span class="mf-base">Ron · Crema coco · Frutilla</span></li>
+            <li class="mf-item"><span class="mf-nombre-coctel">Blue Colada</span><span class="mf-base">Ron · Crema coco · Curazao</span></li>
+          </ul>
+        </div>
+
+        <!-- Daikiris -->
+        <div class="modal-familia">
+          <div class="mf-nombre">Daikiris</div>
+          <ul class="mf-lista">
+            <li class="mf-item"><span class="mf-nombre-coctel">Daikiri frambuesa</span><span class="mf-base">Ron · Frambuesa · Limón</span></li>
+            <li class="mf-item"><span class="mf-nombre-coctel">Daikiri mango</span><span class="mf-base">Ron · Mango · Limón</span></li>
+            <li class="mf-item"><span class="mf-nombre-coctel">Daikiri maracuyá</span><span class="mf-base">Ron · Maracuyá · Limón</span></li>
+            <li class="mf-item"><span class="mf-nombre-coctel">Daikiri frutilla</span><span class="mf-base">Ron · Frutilla · Limón</span></li>
+          </ul>
+        </div>
+
+        <!-- Gin & Sours -->
+        <div class="modal-familia">
+          <div class="mf-nombre">Gin Cocktails · Sours</div>
+          <ul class="mf-lista">
+            <li class="mf-item"><span class="mf-nombre-coctel">Tropical Gin</span><span class="mf-base">Gin · Maracuyá · Red Bull</span></li>
+            <li class="mf-item"><span class="mf-nombre-coctel">Berry Bomb</span><span class="mf-base">Gin · Frambuesa · Red Bull Blue</span></li>
+            <li class="mf-item"><span class="mf-nombre-coctel">Pisco Sour</span><span class="mf-base">Pisco · Limón · Goma</span></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="modal-nota">
+        <div class="modal-nota-bar"></div>
+        <div class="modal-nota-text">
+          <strong>¿Quieres un cóctel exclusivo para tu evento?</strong> Podemos desarrollar una receta de autor a medida — cuéntanos la ocasión y lo diseñamos juntos.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <!-- ─── FOOTER ────────────────────────────────────────────────── -->
 <footer>
   <div class="shell">
@@ -900,6 +1117,26 @@
     });
   }, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
   reveals.forEach(el => obs.observe(el));
+
+  // Modal carta
+  const overlay = document.getElementById('modalCarta');
+
+  function abrirCarta() {
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    overlay.scrollTop = 0;
+  }
+
+  function cerrarCarta(e, forzar) {
+    if (forzar || (e && e.target === overlay)) {
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') cerrarCarta(null, true);
+  });
 </script>
 
 </body>
